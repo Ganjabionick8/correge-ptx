@@ -1,803 +1,185 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CorregePtx™ - Sistema Escolar Básico</title>
-
-<!-- Fonte Google Inter -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-
+<meta charset="UTF-8">
+<title>CorregePtx</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-  :root {
-    --cor-escuro-fundo: #121212;
-    --cor-escuro-texto: #e0e0e0;
-    --cor-claro-fundo: #fefefe;
-    --cor-claro-texto: #222222;
-    --cor-pastel-fundo: #dd6b0879;
-    --cor-pastel-texto: #5c4a3e;
-
-    --cor-primaria: #00caff;
-    --cor-primaria-hover: #009ec3;
-    --cor-botao-texto: #000;
-
-    --raio-borda: 10px;
-    --sombra-card: 0 6px 15px rgba(0, 0, 0, 0.3);
-
-    --fonte-principal: 'Inter', sans-serif;
-
-    --cor-erro: #ff5555;
-    --cor-sucesso: #4caf50;
-    --cor-info: #2196f3;
-    --cor-aviso: #ffcc00;
-  }
-
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
-
-  body {
-    margin: 0;
-    font-family: var(--fonte-principal);
-    font-size: 1rem;
-    background-color: var(--cor-escuro-fundo);
-    color: var(--cor-escuro-texto);
-    transition: background-color 0.3s ease, color 0.3s ease;
-    min-height: 100vh;
-    padding: 15px 10px;
-  }
-  body.tema-claro {
-    background-color: var(--cor-claro-fundo);
-    color: var(--cor-claro-texto);
-  }
-  body.tema-pastel {
-    background-color: var(--cor-pastel-fundo);
-    color: var(--cor-pastel-texto);
-  }
-
-  h1, h2 {
-    text-align: center;
-    color: var(--cor-primaria);
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-    user-select: none;
-    text-shadow: 0 0 6px var(--cor-primaria);
-  }
-
-  p.subtitulo {
-    text-align: center;
-    font-style: italic;
-    margin-top: 0;
-    margin-bottom: 1rem;
-    opacity: 0.7;
-  }
-
-  main {
-    max-width: 960px;
-    margin: 0 auto;
-  }
-
-  section {
-    background-color: #222;
-    padding: 1rem 1.5rem;
-    border-radius: var(--raio-borda);
-    box-shadow: var(--sombra-card);
-    margin-bottom: 1.5rem;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  body.tema-claro section {
-    background-color: #fff;
-    color: var(--cor-claro-texto);
-    box-shadow: 0 8px 22px rgba(0,0,0,0.1);
-  }
-  body.tema-pastel section {
-    background-color: hsla(155, 79%, 55%, 0.4);
-    color: var(--cor-pastel-texto);
-    box-shadow: 0 8px 22px rgba(0,0,0,0.07);
-  }
-
-  label {
-    font-weight: 600;
-    display: block;
-    margin-top: 0.7rem;
-    margin-bottom: 0.25rem;
-  }
-
-  input[type="text"], textarea, select {
-    width: 100%;
-    padding: 0.5rem 0.7rem;
-    border-radius: 7px;
-    border: 1.8px solid #444;
-    background-color: transparent;
-    color: inherit;
-    font-size: 1rem;
-    font-family: var(--fonte-principal);
-    transition: border-color 0.25s ease, background-color 0.25s ease;
-  }
-  input::placeholder, textarea::placeholder {
-    color: #bbb;
-  }
-  input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--cor-primaria);
-    box-shadow: 0 0 8px var(--cor-primaria);
-    background-color: rgba(0, 202, 255, 0.1);
-  }
-  body.tema-claro input,
-  body.tema-claro select,
-  body.tema-claro textarea {
-    border-color: #aaa;
-    background-color: #fff;
-    color: var(--cor-claro-texto);
-  }
-  body.tema-pastel input,
-  body.tema-pastel select,
-  body.tema-pastel textarea {
-    border-color: #b4996f;
-    background-color: #8da11b;
-    color: var(--cor-pastel-texto);
-  }
-
-  button {
-    cursor: pointer;
-    background-color: var(--cor-primaria);
-    color: var(--cor-botao-texto);
-    border: none;
-    border-radius: var(--raio-borda);
-    padding: 0.65rem 1.3rem;
-    font-weight: 600;
-    font-size: 1rem;
-    box-shadow: 0 5px 12px rgba(0, 202, 255, 0.35);
-    transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.1s ease;
-    user-select: none;
-    display: inline-block;
-    margin-top: 0.5rem;
-  }
-  button:hover, button:focus {
-    background-color: var(--cor-primaria-hover);
-    box-shadow: 0 8px 20px rgba(0, 158, 195, 0.6);
-  }
-  button:active {
-    transform: translateY(2px);
-    box-shadow: 0 3px 7px rgba(0, 158, 195, 0.9);
-  }
-
-  .btn-small {
-    font-size: 0.85rem;
-    padding: 0.3rem 0.7rem;
-    margin-left: 0.4rem;
-    border-radius: 6px;
-    user-select: none;
-  }
-  .btn-edit {
-    background-color: #ffcc00;
-    color: #222;
-    box-shadow: 0 3px 8px #ffcc0090;
-  }
-  .btn-edit:hover, .btn-edit:focus {
-    background-color: #ffbb00;
-    box-shadow: 0 5px 14px #ffbb0090;
-  }
-  .btn-delete {
-    background-color: #ff5555;
-    color: #fff;
-    box-shadow: 0 3px 8px #ff555590;
-  }
-  .btn-delete:hover, .btn-delete:focus {
-    background-color: #ee4444;
-    box-shadow: 0 5px 14px #ee444490;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.95rem;
-    margin-top: 0.8rem;
-  }
-  th, td {
-    padding: 0.4rem 0.7rem;
-    border: 1.2px solid #555;
-    text-align: left;
-  }
-  body.tema-claro th, body.tema-claro td {
-    border-color: #ddd;
-  }
-  body.tema-pastel th, body.tema-pastel td {
-    border-color: #cea944;
-  }
-
-  /* Mensagens feedback */
-  .msg-erro {
-    color: var(--cor-erro);
-    font-weight: 600;
-    margin-top: 0.3rem;
-  }
-  .msg-sucesso {
-    color: var(--cor-sucesso);
-    font-weight: 600;
-    margin-top: 0.3rem;
-  }
-  .msg-info {
-    color: var(--cor-info);
-    font-weight: 600;
-    margin-top: 0.3rem;
-  }
-  .msg-aviso {
-    color: var(--cor-aviso);
-    font-weight: 600;
-    margin-top: 0.3rem;
-  }
-
-  /* Flex para forms e controles */
-  .flex-row {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .flex-grow {
-    flex-grow: 1;
-  }
-
-  /* Rodapé */
-  footer {
-    text-align: center;
-    margin-top: 2rem;
-    color: #777;
-    font-size: 0.85rem;
-    user-select: none;
-  }
-  footer a {
-    color: var(--cor-primaria);
-    text-decoration: none;
-  }
-  footer a:hover, footer a:focus {
-    color: var(--cor-primaria-hover);
-    text-decoration: underline;
-  }
-
-  /* Área resultado correção */
-  #resultadoCorrecao {
-    white-space: pre-wrap;
-    margin-top: 1rem;
-    font-weight: 600;
-    font-family: monospace;
-  }
+:root {
+  --cor-primaria: #4caf50;
+  --cor-secundaria: #2196f3;
+  --fundo-claro: #f9f9f9;
+  --texto-claro: #222;
+  --fundo-escuro: #121212;
+  --texto-escuro: #e0e0e0;
+  --input-bg-claro: #fff;
+  --input-bg-escuro: #1e1e1e;
+}
+body { font-family: 'Roboto', sans-serif; background: var(--fundo-claro); color: var(--texto-claro); padding: 20px; max-width: 700px; margin: auto; transition: all 0.3s; }
+body.dark { background: var(--fundo-escuro); color: var(--texto-escuro); }
+h1 { color: var(--cor-primaria); text-align: center; }
+label { display: block; margin-top: 15px; font-weight: bold; }
+input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; border-radius: 6px; border: 1px solid #ccc; background: var(--input-bg-claro); color: var(--texto-claro); }
+body.dark input, body.dark textarea, body.dark select { background: var(--input-bg-escuro); color: var(--texto-escuro); border: 1px solid #555; }
+button { margin-top: 15px; padding: 10px; width: 100%; border: none; border-radius: 6px; background: var(--cor-primaria); color: #fff; font-weight: bold; cursor: pointer; }
+button:hover { background: var(--cor-secundaria); }
+.item-group { margin-top: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
+.total { font-size: 1.5rem; font-weight: bold; margin-top: 20px; text-align: center; color: var(--cor-primaria); }
+.footer { margin-top: 40px; font-size: 0.9rem; text-align: center; color: #666; }
+.footer a { color: var(--cor-primaria); text-decoration: none; margin: 0 5px; }
+.tema-toggle { position: fixed; top: 18px; right: 18px; background: var(--cor-primaria); border: none; border-radius: 20px; width: 50px; height: 26px; cursor: pointer; }
+.tema-toggle:before { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; background: #fff; border-radius: 50%; transition: transform 0.3s ease; }
+body.dark .tema-toggle { background: var(--cor-secundaria); }
+body.dark .tema-toggle:before { transform: translateX(24px); }
+.remove-btn { background:#ff4d4d; color:#fff; border:none; border-radius:50%; width:24px;height:24px; cursor:pointer; float:right; }
+.remove-btn:hover { background:#ff1a1a; }
 </style>
 </head>
-<body class="tema-escuro">
+<body>
 
-<main>
-  <h1>👨‍🏫 CorregePtx™ - Sistema Escolar Básico</h1>
-  <p class="subtitulo">Gerencie turmas, alunos, provas e corrija automaticamente com gabarito e palavras-chave.</p>
+<button class="tema-toggle" aria-label="Alternar tema"></button>
 
-  <!-- Tema -->
-  <section aria-label="Configurações de Tema">
-    <label for="temaSelect">Escolha o tema:</label>
-    <select id="temaSelect" aria-describedby="msgTema" title="Selecione o tema do aplicativo">
-      <option value="escuro">Escuro</option>
-      <option value="claro">Claro</option>
-      <option value="pastel">Pastel</option>
-    </select>
-    <div id="msgTema" class="msg-sucesso" aria-live="polite"></div>
-  </section>
+<h1>CorregePtx</h1>
 
-  <!-- Turmas -->
-  <section aria-label="Gerenciamento de Turmas">
-    <h2>Turmas</h2>
-    <form id="formAddTurma" novalidate>
-      <label for="inputNomeTurma">Nova turma:</label>
-      <input type="text" id="inputNomeTurma" placeholder="Nome da turma" required minlength="2" autocomplete="off" />
-      <button type="submit">Adicionar Turma</button>
-      <div id="msgTurma" class="msg-erro" aria-live="assertive"></div>
-    </form>
-    <table id="tabelaTurmas" aria-label="Lista de turmas">
-      <thead><tr><th>Turma</th><th>Ações</th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </section>
+<label for="aluno">Nome do Aluno</label>
+<input type="text" id="aluno" placeholder="Digite o nome do aluno">
 
-  <!-- Alunos -->
-  <section aria-label="Gerenciamento de Alunos">
-    <h2>Alunos</h2>
-    <form id="formAddAluno" novalidate>
-      <label for="selectTurmasForAluno">Selecione a turma:</label>
-      <select id="selectTurmasForAluno" required>
-        <option value="">-- Selecione uma turma --</option>
-      </select>
+<label for="turma">Turma</label>
+<input type="text" id="turma" placeholder="Digite a turma">
 
-      <label for="inputNomeAluno">Nome do aluno:</label>
-      <input type="text" id="inputNomeAluno" placeholder="Nome do aluno" required minlength="2" autocomplete="off" />
-      <button type="submit">Adicionar Aluno</button>
-      <div id="msgAluno" class="msg-erro" aria-live="assertive"></div>
-    </form>
-    <table id="tabelaAlunos" aria-label="Lista de alunos">
-      <thead><tr><th>Turma</th><th>Aluno</th><th>Ações</th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </section>
+<div class="item-group" aria-label="Questões Objetivas">
+  <h2>Prova Objetiva</h2>
+  <div id="questoesContainer"></div>
+  <button type="button" onclick="adicionarQuestao()">+ Adicionar Questão</button>
+</div>
 
-  <!-- Provas -->
-  <section aria-label="Gerenciamento de Provas">
-    <h2>Provas</h2>
-    <form id="formAddProva" novalidate>
-      <label for="inputTituloProva">Título da prova:</label>
-      <input type="text" id="inputTituloProva" placeholder="Ex: Prova 1 - História" required minlength="2" autocomplete="off" />
+<div class="item-group">
+  <h2>Prova Dissertativa</h2>
+  <label for="dissertativa">Resposta (palavra-chave)</label>
+  <textarea id="dissertativa" rows="4" placeholder="Digite a resposta do aluno"></textarea>
+</div>
 
-      <label for="textareaGabarito">Gabarito (linha a linha):</label>
-      <textarea id="textareaGabarito" rows="5" placeholder="Cada linha é uma resposta correta." required minlength="3"></textarea>
+<div class="total" id="notaTotal">Nota: 0</div>
 
-      <label for="inputPalavrasChave">Palavras-chave (separadas por vírgula):</label>
-      <input type="text" id="inputPalavrasChave" placeholder="exemplo, correto, importante" autocomplete="off" />
+<button onclick="calcularNota()">Calcular Nota</button>
+<button onclick="gerarPDF()">🧾 Gerar PDF</button>
+<button onclick="limparTudo()">🧹 Limpar Tudo</button>
 
-      <button type="submit">Adicionar Prova</button>
-      <div id="msgProva" class="msg-erro" aria-live="assertive"></div>
-    </form>
-    <table id="tabelaProvas" aria-label="Lista de provas">
-      <thead><tr><th>Título</th><th>Ações</th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </section>
+<div class="item-group">
+  <h2>Histórico de Alunos</h2>
+  <ul id="historicoAlunos"></ul>
+</div>
 
-  <!-- Correção -->
-  <section aria-label="Correção Automática">
-    <h2>Correção</h2>
-    <form id="formCorrecao" novalidate>
-      <label for="selectTurmasForCorrecao">Selecione a turma:</label>
-      <select id="selectTurmasForCorrecao" required>
-        <option value="">-- Selecione uma turma --</option>
-      </select>
-
-      <label for="selectAlunosForCorrecao">Selecione o aluno:</label>
-      <select id="selectAlunosForCorrecao" required>
-        <option value="">-- Selecione um aluno --</option>
-      </select>
-
-      <label for="selectProvasForCorrecao">Selecione a prova:</label>
-      <select id="selectProvasForCorrecao" required>
-        <option value="">-- Selecione uma prova --</option>
-      </select>
-
-      <label for="textareaRespostaAluno">Resposta do aluno (linha a linha):</label>
-      <textarea id="textareaRespostaAluno" rows="6" placeholder="Cole ou escreva a resposta do aluno..." required minlength="3"></textarea>
-
-      <button type="submit">Corrigir Prova</button>
-      <div id="msgCorrecao" class="msg-erro" aria-live="assertive"></div>
-    </form>
-
-    <pre id="resultadoCorrecao" role="region" aria-live="polite"></pre>
-  </section>
-  <!-- (Insira antes do </main> do código anterior, para ficar entre seção Correção e o rodapé) -->
-
-<section aria-label="Apoie este projeto" style="background-color: #111; border-radius: 10px; padding: 1rem 1.5rem; box-shadow: 0 6px 15px rgba(0,0,0,0.3); margin-bottom: 1.5rem;">
-  <h2 style="color:#00caff; user-select:none; text-shadow: 0 0 6px #00caff;">💙 Apoie este projeto</h2>
-  <p>Se curtir o app, pode fazer um apoio simbólico para ajudar nos custos e na motivação!</p>
-
-  <button id="btnApoiar" style="margin-top:0.5rem;">Apoiar</button>
-
-  <div id="msgApoio" role="alert" style="margin-top:0.5rem; font-weight:600; color:#4caf50;"></div>
-
-  <hr style="margin:1rem 0;" />
-
-  
-  <button id="btnCopiarPix" style="background:#00caff; color:#000; border-radius:6px; padding:0.5rem 1rem; font-weight:600; user-select:none;">
-    Copiar chave PIX
-  </button>
-  <span id="msgPix" style="margin-left: 1rem; font-weight:600; color:#4caf50;"></span>
-</section>
+<div class="footer">
+  Feito por Ganjabionick8 • Apoie este projeto ❤️<br>
+  <a href="https://instagram.com/Ganjabionick8" target="_blank">Instagram</a> | 
+  <a href="https://github.com/Ganjabionick8" target="_blank">GitHub</a>
+</div>
 
 <script>
-  // Pix e apoio simbólico
-  const btnApoiar = document.getElementById('btnApoiar');
-  const inputValorApoio = document.getElementById('inputValorApoio');
-  const msgApoio = document.getElementById('msgApoio');
-  const btnCopiarPix = document.getElementById('btnCopiarPix');
-  const msgPix = document.getElementById('msgPix');
+const temaToggle = document.querySelector('.tema-toggle');
+temaToggle.addEventListener('click',()=>{
+  document.body.classList.toggle('dark');
+  localStorage.setItem('temaCorrege', document.body.classList.contains('dark')?'dark':'light');
+});
+window.onload=()=>{ 
+  if(localStorage.getItem('temaCorrege')==='dark') document.body.classList.add('dark');
+  carregarHistorico();
+};
 
-  // Sua chave PIX — substitua aqui caso queira
-  const chavePix = 'biel.simeone@gmail.com';
+let questoes = [];
 
-  btnApoiar.addEventListener('click', () => {
-    const valor = Number(inputValorApoio.value);
-    if (isNaN(valor) || valor < 1) {
-      msgApoio.style.color = '#ff5555';
-      msgApoio.textContent = 'Informe um valor válido maior ou igual a R$1.';
-      return;
-    }
-    msgApoio.style.color = '#4caf50';
-    msgApoio.textContent = `Valeu demais pelo apoio de R$${valor.toFixed(2)}! 🙌❤️`;
-    inputValorApoio.value = '';
-    setTimeout(() => {
-      msgApoio.textContent = '';
-    }, 4000);
+function adicionarQuestao(pergunta='', resposta=''){
+  const container = document.getElementById('questoesContainer');
+  const index = questoes.length;
+  const div = document.createElement('div');
+  div.classList.add('item-row');
+  div.innerHTML=`
+    <button class="remove-btn" onclick="removerQuestao(${index})" title="Remover">×</button>
+    <label>Pergunta ${index+1}</label>
+    <input type="text" value="${pergunta}" placeholder="Digite a questão">
+    <label>Resposta Correta</label>
+    <input type="text" value="${resposta}" placeholder="Digite a resposta correta">
+    <hr>
+  `;
+  container.appendChild(div);
+  questoes.push(index);
+}
+
+function removerQuestao(i){
+  document.getElementById('questoesContainer').children[i].remove();
+  questoes.splice(i,1);
+}
+
+function calcularNota(){
+  let nota = 0;
+  const container = document.getElementById('questoesContainer');
+  for(let i=0;i<container.children.length;i++){
+    const inputs = container.children[i].querySelectorAll('input');
+    if(inputs[0].value.trim().toLowerCase() === inputs[1].value.trim().toLowerCase()) nota += 5;
+  }
+  const dissertativa = document.getElementById('dissertativa').value.toLowerCase();
+  if(dissertativa.includes('html')) nota += 5;
+
+  document.getElementById('notaTotal').innerText=`Nota: ${nota}`;
+  salvarHistorico(nota);
+}
+
+function gerarPDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let y=10;
+  const aluno=document.getElementById('aluno').value||'N/A';
+  const turma=document.getElementById('turma').value||'N/A';
+  const nota=document.getElementById('notaTotal').innerText;
+  doc.setFontSize(16); doc.text("CorregePtx",10,y); y+=10;
+  doc.setFontSize(12); doc.text(`Aluno: ${aluno}`,10,y); y+=7;
+  doc.text(`Turma: ${turma}`,10,y); y+=10;
+  doc.text("Prova Objetiva:",10,y); y+=7;
+  const container = document.getElementById('questoesContainer');
+  for(let i=0;i<container.children.length;i++){
+    const inputs = container.children[i].querySelectorAll('input');
+    doc.text(`Q${i+1}: ${inputs[0].value} | Resposta: ${inputs[1].value}`,10,y); y+=6;
+  }
+  doc.text("Prova Dissertativa:",10,y); y+=7;
+  doc.text(document.getElementById('dissertativa').value||'N/A',10,y); y+=10;
+  doc.text(nota,10,y);
+  doc.save("correcao.pdf");
+}
+
+function limparTudo(){
+  if(confirm("Limpar todos os campos?")){
+    document.getElementById('aluno').value='';
+    document.getElementById('turma').value='';
+    document.getElementById('dissertativa').value='';
+    document.getElementById('notaTotal').innerText='Nota: 0';
+    document.getElementById('questoesContainer').innerHTML='';
+    questoes=[];
+  }
+}
+
+function salvarHistorico(nota){
+  const aluno=document.getElementById('aluno').value||'N/A';
+  const turma=document.getElementById('turma').value||'N/A';
+  const historico = JSON.parse(localStorage.getItem('historicoAlunos')||'[]');
+  historico.unshift({aluno,turma,nota});
+  if(historico.length>10) historico.pop();
+  localStorage.setItem('historicoAlunos',JSON.stringify(historico));
+  carregarHistorico();
+}
+
+function carregarHistorico(){
+  const lista=document.getElementById('historicoAlunos');
+  lista.innerHTML='';
+  const historico = JSON.parse(localStorage.getItem('historicoAlunos')||'[]');
+  historico.forEach(item=>{
+    const li=document.createElement('li');
+    li.innerText=`${item.aluno} (${item.turma}): ${item.nota}`;
+    lista.appendChild(li);
   });
-
-  btnCopiarPix.addEventListener('click', () => {
-    navigator.clipboard.writeText(chavePix).then(() => {
-      msgPix.textContent = 'Chave PIX copiada para área de transferência!';
-      setTimeout(() => { msgPix.textContent = ''; }, 3000);
-    }).catch(() => {
-      msgPix.textContent = 'Erro ao copiar chave PIX.';
-    });
-  });
+}
 </script>
 
-</main>
-
-<footer>
-  Desenvolvido por <a href="https://github.com/Ganjabionick8" target="_blank" rel="noopener noreferrer">@Ganjabionick8</a> – CorregePtx™ © 2025
-</footer>
-
-<script>
-  'use strict';
-
-  // Dados no localStorage
-  let turmas = JSON.parse(localStorage.getItem('turmas') || '[]');
-  let alunos = JSON.parse(localStorage.getItem('alunos') || '[]');
-  let provas = JSON.parse(localStorage.getItem('provas') || '[]');
-
-  // Referências DOM
-  const temaSelect = document.getElementById('temaSelect');
-  const msgTema = document.getElementById('msgTema');
-
-  const formAddTurma = document.getElementById('formAddTurma');
-  const inputNomeTurma = document.getElementById('inputNomeTurma');
-  const msgTurma = document.getElementById('msgTurma');
-  const tabelaTurmasBody = document.querySelector('#tabelaTurmas tbody');
-
-  const formAddAluno = document.getElementById('formAddAluno');
-  const selectTurmasForAluno = document.getElementById('selectTurmasForAluno');
-  const inputNomeAluno = document.getElementById('inputNomeAluno');
-  const msgAluno = document.getElementById('msgAluno');
-  const tabelaAlunosBody = document.querySelector('#tabelaAlunos tbody');
-
-  const formAddProva = document.getElementById('formAddProva');
-  const inputTituloProva = document.getElementById('inputTituloProva');
-  const textareaGabarito = document.getElementById('textareaGabarito');
-  const inputPalavrasChave = document.getElementById('inputPalavrasChave');
-  const msgProva = document.getElementById('msgProva');
-  const tabelaProvasBody = document.querySelector('#tabelaProvas tbody');
-
-  const formCorrecao = document.getElementById('formCorrecao');
-  const selectTurmasForCorrecao = document.getElementById('selectTurmasForCorrecao');
-  const selectAlunosForCorrecao = document.getElementById('selectAlunosForCorrecao');
-  const selectProvasForCorrecao = document.getElementById('selectProvasForCorrecao');
-  const textareaRespostaAluno = document.getElementById('textareaRespostaAluno');
-  const msgCorrecao = document.getElementById('msgCorrecao');
-  const resultadoCorrecao = document.getElementById('resultadoCorrecao');
-
-  // --- Utilitários ---
-  const salvarDados = () => {
-    localStorage.setItem('turmas', JSON.stringify(turmas));
-    localStorage.setItem('alunos', JSON.stringify(alunos));
-    localStorage.setItem('provas', JSON.stringify(provas));
-  };
-
-  const criarOption = (value, text) => {
-    const option = document.createElement('option');
-    option.value = value;
-    option.textContent = text;
-    return option;
-  };
-
-  const mudarTema = (tema) => {
-    document.body.className = '';
-    if (['escuro','claro','pastel'].includes(tema)) {
-      document.body.classList.add(`tema-${tema}`);
-      localStorage.setItem('temaPreferido', tema);
-      msgTema.textContent = `Tema alterado para "${tema}"`;
-      setTimeout(() => { msgTema.textContent = ''; }, 2500);
-    }
-  };
-
-  // --- Atualização das listas e selects ---
-  const atualizarSelectsTurmas = () => {
-    [selectTurmasForAluno, selectTurmasForCorrecao].forEach(select => {
-      select.innerHTML = '<option value="">-- Selecione uma turma --</option>';
-      turmas.forEach(t => {
-        select.appendChild(criarOption(t.id, t.nome));
-      });
-    });
-  };
-
-  const atualizarTabelaTurmas = () => {
-    tabelaTurmasBody.innerHTML = '';
-    turmas.forEach(t => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${t.nome}</td>
-        <td>
-          <button class="btn-small btn-delete" aria-label="Excluir turma ${t.nome}" data-id="${t.id}">Excluir</button>
-        </td>`;
-      tabelaTurmasBody.appendChild(tr);
-    });
-  };
-
-  const atualizarTabelaAlunos = () => {
-    tabelaAlunosBody.innerHTML = '';
-    alunos.forEach(a => {
-      const turma = turmas.find(t => t.id === a.turmaId);
-      const nomeTurma = turma ? turma.nome : '(Turma não encontrada)';
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${nomeTurma}</td>
-        <td>${a.nome}</td>
-        <td>
-          <button class="btn-small btn-delete" aria-label="Excluir aluno ${a.nome}" data-id="${a.id}">Excluir</button>
-        </td>`;
-      tabelaAlunosBody.appendChild(tr);
-    });
-  };
-
-  const atualizarTabelaProvas = () => {
-    tabelaProvasBody.innerHTML = '';
-    provas.forEach(p => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${p.titulo}</td>
-        <td>
-          <button class="btn-small btn-edit" aria-label="Editar prova ${p.titulo}" data-id="${p.id}">Editar</button>
-          <button class="btn-small btn-delete" aria-label="Excluir prova ${p.titulo}" data-id="${p.id}">Excluir</button>
-        </td>`;
-      tabelaProvasBody.appendChild(tr);
-    });
-
-    // Atualiza select de provas na correção
-    selectProvasForCorrecao.innerHTML = '<option value="">-- Selecione uma prova --</option>';
-    provas.forEach(p => {
-      selectProvasForCorrecao.appendChild(criarOption(p.id, p.titulo));
-    });
-  };
-
-  const atualizarSelectAlunosCorrecao = () => {
-    const turmaId = selectTurmasForCorrecao.value;
-    selectAlunosForCorrecao.innerHTML = '<option value="">-- Selecione um aluno --</option>';
-    if (!turmaId) return;
-    const alunosDaTurma = alunos.filter(a => a.turmaId === turmaId);
-    alunosDaTurma.forEach(a => {
-      selectAlunosForCorrecao.appendChild(criarOption(a.id, a.nome));
-    });
-  };
-
-  // --- ID ÚNICO ---
-  const gerarId = () => {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-  };
-
-  // --- Eventos ---
-
-  // Tema
-  temaSelect.value = localStorage.getItem('temaPreferido') || 'escuro';
-  mudarTema(temaSelect.value);
-  temaSelect.addEventListener('change', e => {
-    mudarTema(e.target.value);
-  });
-
-  // Turmas
-  formAddTurma.addEventListener('submit', e => {
-    e.preventDefault();
-    msgTurma.textContent = '';
-    const nome = inputNomeTurma.value.trim();
-    if (nome.length < 2) {
-      msgTurma.textContent = 'Informe um nome válido para a turma.';
-      return;
-    }
-    // Verifica duplicado
-    if (turmas.some(t => t.nome.toLowerCase() === nome.toLowerCase())) {
-      msgTurma.textContent = 'Já existe uma turma com esse nome.';
-      return;
-    }
-    turmas.push({ id: gerarId(), nome });
-    salvarDados();
-    atualizarTabelaTurmas();
-    atualizarSelectsTurmas();
-    inputNomeTurma.value = '';
-    msgTurma.textContent = '';
-  });
-
-  // Excluir turma
-  tabelaTurmasBody.addEventListener('click', e => {
-    if (!e.target.matches('button.btn-delete')) return;
-    const id = e.target.dataset.id;
-    if (!confirm('Excluir essa turma e todos os alunos dela?')) return;
-    turmas = turmas.filter(t => t.id !== id);
-    alunos = alunos.filter(a => a.turmaId !== id);
-    salvarDados();
-    atualizarTabelaTurmas();
-    atualizarTabelaAlunos();
-    atualizarSelectsTurmas();
-    atualizarSelectAlunosCorrecao();
-  });
-
-  // Alunos
-  formAddAluno.addEventListener('submit', e => {
-    e.preventDefault();
-    msgAluno.textContent = '';
-    const turmaId = selectTurmasForAluno.value;
-    const nome = inputNomeAluno.value.trim();
-    if (!turmaId) {
-      msgAluno.textContent = 'Selecione uma turma para o aluno.';
-      return;
-    }
-    if (nome.length < 2) {
-      msgAluno.textContent = 'Informe um nome válido para o aluno.';
-      return;
-    }
-    // Evita duplicado mesmo nome na mesma turma
-    if (alunos.some(a => a.nome.toLowerCase() === nome.toLowerCase() && a.turmaId === turmaId)) {
-      msgAluno.textContent = 'Aluno com esse nome já cadastrado nessa turma.';
-      return;
-    }
-    alunos.push({ id: gerarId(), nome, turmaId });
-    salvarDados();
-    atualizarTabelaAlunos();
-    atualizarSelectAlunosCorrecao();
-    inputNomeAluno.value = '';
-    msgAluno.textContent = '';
-  });
-
-  // Excluir aluno
-  tabelaAlunosBody.addEventListener('click', e => {
-    if (!e.target.matches('button.btn-delete')) return;
-    const id = e.target.dataset.id;
-    if (!confirm('Excluir este aluno?')) return;
-    alunos = alunos.filter(a => a.id !== id);
-    salvarDados();
-    atualizarTabelaAlunos();
-    atualizarSelectAlunosCorrecao();
-  });
-
-  // Provas
-  formAddProva.addEventListener('submit', e => {
-    e.preventDefault();
-    msgProva.textContent = '';
-    const titulo = inputTituloProva.value.trim();
-    const gabaritoText = textareaGabarito.value.trim();
-    const palavrasChaveText = inputPalavrasChave.value.trim();
-
-    if (titulo.length < 2) {
-      msgProva.textContent = 'Informe um título válido para a prova.';
-      return;
-    }
-    if (gabaritoText.length < 3) {
-      msgProva.textContent = 'Informe o gabarito com pelo menos uma linha.';
-      return;
-    }
-
-    // Verifica duplicado título
-    if (provas.some(p => p.titulo.toLowerCase() === titulo.toLowerCase())) {
-      msgProva.textContent = 'Já existe uma prova com esse título.';
-      return;
-    }
-
-    const gabaritoLinhas = gabaritoText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
-    const palavrasChave = palavrasChaveText.length > 0
-      ? palavrasChaveText.split(',').map(s => s.trim().toLowerCase()).filter(s => s.length > 0)
-      : [];
-
-    provas.push({ id: gerarId(), titulo, gabarito: gabaritoLinhas, palavrasChave });
-    salvarDados();
-    atualizarTabelaProvas();
-    inputTituloProva.value = '';
-    textareaGabarito.value = '';
-    inputPalavrasChave.value = '';
-    msgProva.textContent = '';
-  });
-
-  // Excluir e editar prova
-  tabelaProvasBody.addEventListener('click', e => {
-    const target = e.target;
-    if (!target.matches('button')) return;
-    const id = target.dataset.id;
-    if (!id) return;
-
-    if (target.classList.contains('btn-delete')) {
-      if (!confirm('Excluir esta prova?')) return;
-      provas = provas.filter(p => p.id !== id);
-      salvarDados();
-      atualizarTabelaProvas();
-      return;
-    }
-
-    if (target.classList.contains('btn-edit')) {
-      // Edita prova: preenche formulário para edição
-      const prova = provas.find(p => p.id === id);
-      if (!prova) return alert('Prova não encontrada!');
-      inputTituloProva.value = prova.titulo;
-      textareaGabarito.value = prova.gabarito.join('\n');
-      inputPalavrasChave.value = prova.palavrasChave.join(', ');
-      msgProva.textContent = 'Editando prova: para salvar, clique em "Adicionar Prova" novamente. O título deve ser único.';
-      // Remove a prova antiga para substituição ao salvar
-      provas = provas.filter(p => p.id !== id);
-      salvarDados();
-      atualizarTabelaProvas();
-    }
-  });
-
-  // Atualiza lista alunos no formulário de correção quando muda turma
-  selectTurmasForCorrecao.addEventListener('change', () => {
-    atualizarSelectAlunosCorrecao();
-    selectAlunosForCorrecao.value = '';
-  });
-
-  // Correção da prova
-  formCorrecao.addEventListener('submit', e => {
-    e.preventDefault();
-    msgCorrecao.textContent = '';
-    resultadoCorrecao.textContent = '';
-
-    const turmaId = selectTurmasForCorrecao.value;
-    const alunoId = selectAlunosForCorrecao.value;
-    const provaId = selectProvasForCorrecao.value;
-    const respostaText = textareaRespostaAluno.value.trim();
-
-    if (!turmaId) {
-      msgCorrecao.textContent = 'Selecione a turma.';
-      return;
-    }
-    if (!alunoId) {
-      msgCorrecao.textContent = 'Selecione o aluno.';
-      return;
-    }
-    if (!provaId) {
-      msgCorrecao.textContent = 'Selecione a prova.';
-      return;
-    }
-    if (respostaText.length < 3) {
-      msgCorrecao.textContent = 'Informe a resposta do aluno para correção.';
-      return;
-    }
-
-    const prova = provas.find(p => p.id === provaId);
-    if (!prova) {
-      msgCorrecao.textContent = 'Prova não encontrada.';
-      return;
-    }
-
-    const respostasAluno = respostaText.split(/\r?\n/).map(l => l.trim());
-    const gabarito = prova.gabarito;
-
-    let acertos = 0;
-    let total = gabarito.length;
-
-    let resultadoLinhas = [];
-    resultadoLinhas.push(`📋 Correção da prova: ${prova.titulo}`);
-    resultadoLinhas.push(`Aluno: ${alunos.find(a => a.id === alunoId)?.nome || '(desconhecido)'}`);
-    resultadoLinhas.push('---------------------------------------');
-
-    for (let i = 0; i < total; i++) {
-      const correta = gabarito[i];
-      const resposta = respostasAluno[i] || '';
-      const acertou = resposta.toLowerCase() === correta.toLowerCase();
-      if (acertou) acertos++;
-      resultadoLinhas.push(`Q${i+1}: ${resposta} ${acertou ? '✔️' : `❌ (correto: ${correta})`}`);
-    }
-    resultadoLinhas.push('---------------------------------------');
-    resultadoLinhas.push(`Acertos (gabarito): ${acertos} de ${total}`);
-
-    // Verificação palavras-chave na resposta total
-    if (prova.palavrasChave.length > 0) {
-      resultadoLinhas.push('');
-      resultadoLinhas.push('Palavras-chave verificadas (na resposta completa):');
-      const textoRespostaCompleta = respostaText.toLowerCase();
-      prova.palavrasChave.forEach(palavra => {
-        const achou = textoRespostaCompleta.includes(palavra);
-        resultadoLinhas.push(`- "${palavra}": ${achou ? 'Presente ✔️' : 'Ausente ❌'}`);
-      });
-    }
-
-    resultadoCorrecao.textContent = resultadoLinhas.join('\n');
-    msgCorrecao.textContent = '';
-  });
-
-  // Inicialização
-  atualizarTabelaTurmas();
-  atualizarTabelaAlunos();
-  atualizarTabelaProvas();
-  atualizarSelectsTurmas();
-  atualizarSelectAlunosCorrecao();
-  
-
-</script>
 </body>
 </html>
